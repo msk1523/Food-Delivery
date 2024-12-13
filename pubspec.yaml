@@ -44,10 +44,6 @@ dependencies:
   flutter_dotenv: ^5.2.1
   google_generative_ai: ^0.4.6
   rive: ^0.13.20
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   firebase_core: ^3.6.0
 

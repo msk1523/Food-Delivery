@@ -1,3 +1,4 @@
+import 'package:food_delivery/widget/app_constant.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 class GeminiService {
@@ -21,8 +22,7 @@ class GeminiService {
       : _apiKey = "AIzaSyB8I22mTsbrsRSLW_-DX0Cxny-wZQv7XZs",
         _model = GenerativeModel(
           model: 'gemini-2.0-flash-exp',
-          apiKey:
-              "AIzaSyB8I22mTsbrsRSLW_-DX0Cxny-wZQv7XZs", // Use from environment
+          apiKey: apiKey, // Use from environment
           generationConfig: GenerationConfig(
             temperature: 1,
             topK: 40,
