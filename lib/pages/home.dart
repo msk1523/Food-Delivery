@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:food_delivery/pages/chat_bot.dart';
 import 'package:food_delivery/pages/details.dart';
 import 'package:food_delivery/pages/login.dart';
+import 'package:food_delivery/service/database.dart';
+import 'package:food_delivery/widget/chatbot.dart';
 import 'package:food_delivery/widget/widget_support.dart';
+import 'package:food_delivery/pages/order.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +16,222 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool icecream = false, pizza = false, salad = false, burger = false;
+
+  Stream? fooditemStream;
+  ontheload() async {
+    fooditemStream = await DatabaseMethods().getFoodItem("Ice-cream");
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    ontheload();
+    super.initState();
+  }
+
+  Widget allItemsVertically() {
+    return StreamBuilder(
+        stream: fooditemStream,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: snapshot.data.docs.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot ds = snapshot.data.docs[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Details(
+                                      image: ds["Image"],
+                                      name: ds["Name"],
+                                      detail: ds["Detail"],
+                                      price: ds["Price"],
+                                    )));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Material(
+                          elevation: 5,
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.network(
+                                    ds["Image"],
+                                    height: 120,
+                                    width: 120,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: Text(
+                                        ds["Name"],
+                                        style:
+                                            AppWidget.semiBoldTextFieldStyle(),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: Text(
+                                        ds["Detail"],
+                                        style: AppWidget.lightTextFieldStyle(),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            ds["Price"] + "/-",
+                                            style: AppWidget
+                                                .semiBoldTextFieldStyle(),
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.location_pin,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                "2.2km",
+                                                style: AppWidget
+                                                    .semiBoldTextFieldStyle(),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+              : CircularProgressIndicator();
+        });
+  }
+
+  Widget allItems() {
+    return StreamBuilder(
+        stream: fooditemStream,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: snapshot.data.docs.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot ds = snapshot.data.docs[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Details(
+                                      image: ds["Image"],
+                                      name: ds['Name'],
+                                      detail: ds["Detail"],
+                                      price: ds["Price"],
+                                    )));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(5),
+                        child: Material(
+                          elevation: 5,
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: EdgeInsets.all(14),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.network(
+                                    ds["Image"],
+                                    height: 150,
+                                    width: 150,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Text(
+                                  ds["Name"],
+                                  style: AppWidget.semiBoldTextFieldStyle(),
+                                ),
+                                const SizedBox(
+                                  height: 5.0,
+                                ),
+                                Text(
+                                  ds["Detail"],
+                                  style: AppWidget.lightTextFieldStyle(),
+                                ),
+                                const SizedBox(
+                                  height: 5.0,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      ds["Price"] + "/-",
+                                      style: AppWidget.semiBoldTextFieldStyle(),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.location_pin,
+                                          color: Colors.black,
+                                        ),
+                                        Text(
+                                          "2km",
+                                          style: AppWidget
+                                              .semiBoldTextFieldStyle(),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+              : CircularProgressIndicator();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,16 +255,24 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: const Icon(
-                          Icons.shopping_cart,
-                          color: Colors.white,
-                        ),
-                      ),
+                      // Container(
+                      //   padding: EdgeInsets.all(3),
+                      //   decoration: BoxDecoration(
+                      //       color: Colors.black,
+                      //       borderRadius: BorderRadius.circular(10)),
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (context) => Order()));
+                      //     },
+                      //     child: Icon(
+                      //       Icons.shopping_cart,
+                      //       color: Colors.white,
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(
                         width: 20,
                       ),
@@ -54,7 +281,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ChatBot()));
+                                  builder: (context) => ChatScreen()));
                         },
                         child: Container(
                           padding: EdgeInsets.all(3),
@@ -68,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       const SizedBox(
-                        width: 20,
+                        width: 30,
                       ),
                       GestureDetector(
                         onTap: () {
@@ -86,6 +313,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
+                      SizedBox(width: 20),
                     ],
                   )
                 ],
@@ -118,11 +346,13 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       icecream = true;
                       pizza = false;
                       burger = false;
                       salad = false;
+                      fooditemStream =
+                          await DatabaseMethods().getFoodItem("Ice-cream");
                       setState(() {});
                     },
                     child: Material(
@@ -144,11 +374,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       icecream = false;
                       pizza = false;
                       burger = true;
                       salad = false;
+                      fooditemStream =
+                          await DatabaseMethods().getFoodItem("Burger");
                       setState(() {});
                     },
                     child: Material(
@@ -170,11 +402,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       icecream = false;
                       pizza = true;
                       burger = false;
                       salad = false;
+                      fooditemStream =
+                          await DatabaseMethods().getFoodItem("Pizza");
                       setState(() {});
                     },
                     child: Material(
@@ -196,11 +430,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       icecream = false;
                       pizza = false;
                       burger = false;
                       salad = true;
+                      fooditemStream =
+                          await DatabaseMethods().getFoodItem("Salad");
                       setState(() {});
                     },
                     child: Material(
@@ -226,276 +462,14 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 20,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Details()));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(5),
-                        child: Material(
-                          elevation: 5,
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            padding: EdgeInsets.all(14),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.asset(
-                                  "images/salad2.png",
-                                  height: 150,
-                                  width: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                                Text(
-                                  "Veggie Taco Hash",
-                                  style: AppWidget.semiBoldTextFieldStyle(),
-                                ),
-                                const SizedBox(
-                                  height: 5.0,
-                                ),
-                                Text(
-                                  "Fresh and Healthy",
-                                  style: AppWidget.lightTextFieldStyle(),
-                                ),
-                                const SizedBox(
-                                  height: 5.0,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "250/-",
-                                      style: AppWidget.semiBoldTextFieldStyle(),
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.location_pin,
-                                          color: Colors.black,
-                                        ),
-                                        Text(
-                                          "2km",
-                                          style: AppWidget
-                                              .semiBoldTextFieldStyle(),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(5),
-                      child: Material(
-                        elevation: 5,
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: EdgeInsets.all(14),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                "images/salad3.png",
-                                height: 150,
-                                width: 150,
-                                fit: BoxFit.cover,
-                              ),
-                              Text(
-                                "Veggie Mix Bowl",
-                                style: AppWidget.semiBoldTextFieldStyle(),
-                              ),
-                              const SizedBox(
-                                height: 5.0,
-                              ),
-                              Text(
-                                "Fresh and Healthy",
-                                style: AppWidget.lightTextFieldStyle(),
-                              ),
-                              const SizedBox(
-                                height: 5.0,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "250/-",
-                                    style: AppWidget.semiBoldTextFieldStyle(),
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.location_pin,
-                                        color: Colors.black,
-                                      ),
-                                      Text(
-                                        "2km",
-                                        style:
-                                            AppWidget.semiBoldTextFieldStyle(),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(5),
-                      child: Material(
-                        elevation: 5,
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: EdgeInsets.all(14),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                "images/pizza2.png",
-                                height: 150,
-                                width: 150,
-                                fit: BoxFit.cover,
-                              ),
-                              Text(
-                                "Mixed Veg Pizza",
-                                style: AppWidget.semiBoldTextFieldStyle(),
-                              ),
-                              const SizedBox(
-                                height: 5.0,
-                              ),
-                              Text(
-                                "Crispy and Tasty",
-                                style: AppWidget.lightTextFieldStyle(),
-                              ),
-                              const SizedBox(
-                                height: 5.0,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "300/-",
-                                    style: AppWidget.semiBoldTextFieldStyle(),
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.location_pin,
-                                        color: Colors.black,
-                                      ),
-                                      Text(
-                                        "1km",
-                                        style:
-                                            AppWidget.semiBoldTextFieldStyle(),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              Container(
+                height: 300,
+                child: allItems(),
               ),
               const SizedBox(
                 height: 30.0,
               ),
-              Container(
-                // margin: EdgeInsets.only(right: 3, left: 3),
-                child: Material(
-                  elevation: 5,
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          "images/pizza3.png",
-                          height: 120,
-                          width: 120,
-                          fit: BoxFit.contain,
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              child: Text(
-                                "Farmhouse Pizza",
-                                style: AppWidget.semiBoldTextFieldStyle(),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              child: Text(
-                                "Veggies and yummy cheese",
-                                style: AppWidget.lightTextFieldStyle(),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    "280/-",
-                                    style: AppWidget.semiBoldTextFieldStyle(),
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.location_pin,
-                                        color: Colors.black,
-                                      ),
-                                      Text(
-                                        "2.2km",
-                                        style:
-                                            AppWidget.semiBoldTextFieldStyle(),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              allItemsVertically(),
             ],
           ),
         ),

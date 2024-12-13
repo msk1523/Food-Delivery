@@ -38,6 +38,12 @@ dependencies:
   http: ^1.2.2
   random_string: ^2.3.1
   shared_preferences: ^2.3.2
+  image_picker: ^1.1.2
+  firebase_storage: ^12.3.7
+  flutter_markdown: ^0.7.4+3
+  flutter_dotenv: ^5.2.1
+  google_generative_ai: ^0.4.6
+  rive: ^0.13.20
 
 
   # The following adds the Cupertino Icons font to your application.

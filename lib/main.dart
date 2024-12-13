@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:food_delivery/admin/admin_login.dart';
 import 'package:food_delivery/admin/home_admin.dart';
 import 'package:food_delivery/pages/bottomnav.dart';
-import 'package:food_delivery/pages/chat_bot.dart';
 import 'package:food_delivery/pages/details.dart';
 import 'package:food_delivery/pages/home.dart';
 import 'package:food_delivery/pages/login.dart';
@@ -14,10 +14,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:food_delivery/firebase_options.dart';
 import 'package:food_delivery/pages/wallet.dart';
 import 'package:food_delivery/widget/app_constant.dart';
+import 'package:food_delivery/widget/chatbot.dart';
 
 void main() async {
   Stripe.publishableKey = publishableKey;
   WidgetsFlutterBinding.ensureInitialized();
+  // await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       home: Onboard(),
     );
   }

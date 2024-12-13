@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/admin/add_food.dart';
 import 'package:food_delivery/admin/admin_login.dart';
-import 'package:food_delivery/pages/chat_bot.dart';
+import 'package:food_delivery/widget/chatbot.dart';
 import 'package:food_delivery/widget/widget_support.dart';
 
 class AdminHome extends StatefulWidget {
@@ -35,8 +35,10 @@ class _AdminHomeState extends State<AdminHome> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => ChatBot()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatScreen()));
                       },
                       child: Container(
                         padding: EdgeInsets.all(3),
