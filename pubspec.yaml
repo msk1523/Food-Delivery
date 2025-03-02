@@ -46,7 +46,7 @@ dependencies:
   rive: ^0.13.20
   cupertino_icons: ^1.0.8
   firebase_core: ^3.6.0
-
+  google_ml_kit: ^0.6.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

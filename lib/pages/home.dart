@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/pages/details.dart';
 import 'package:food_delivery/pages/login.dart';
+import 'package:food_delivery/pages/scanPhoto.dart';
 import 'package:food_delivery/service/database.dart';
 import 'package:food_delivery/widget/chatbot.dart';
 import 'package:food_delivery/widget/widget_support.dart';
@@ -255,24 +256,24 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Row(
                     children: [
-                      // Container(
-                      //   padding: EdgeInsets.all(3),
-                      //   decoration: BoxDecoration(
-                      //       color: Colors.black,
-                      //       borderRadius: BorderRadius.circular(10)),
-                      //   child: GestureDetector(
-                      //     onTap: () {
-                      //       Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //               builder: (context) => Order()));
-                      //     },
-                      //     child: Icon(
-                      //       Icons.shopping_cart,
-                      //       color: Colors.white,
-                      //     ),
-                      //   ),
-                      // ),
+                      Container(
+                        padding: EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ScanPhoto()));
+                          },
+                          child: const Icon(
+                            Icons.camera_alt_outlined,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                       const SizedBox(
                         width: 20,
                       ),
@@ -295,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       const SizedBox(
-                        width: 30,
+                        width: 20,
                       ),
                       GestureDetector(
                         onTap: () {
