@@ -32,7 +32,7 @@ class _ScanPhotoState extends State<ScanPhoto> {
     await _uploadToFirebase(imageFile);
 
     // Process image to extract text
-    await _processImage(imageFile);
+    //await _processImage(imageFile); //UNCOMMENT THIS LINE
 
     setState(() {
       _isLoading = false;
@@ -51,23 +51,24 @@ class _ScanPhotoState extends State<ScanPhoto> {
   }
 
   /// Method to process the image and extract text
-  Future<void> _processImage(File imageFile) async {
-    final inputImage = InputImage.fromFile(imageFile);
-    final textRecognizer =
-        GoogleMlKit.vision.textRecognizer(); // Corrected line
+  // Future<void> _processImage(File imageFile) async {
+  //   final inputImage = InputImage.fromFile(imageFile);
+  //   final textRecognizer = GoogleMlKit.vision.textRecognizer();
 
-    try {
-      final text = await textRecognizer.processImage(inputImage);
+  //   try {
+  //     final text = await textRecognizer.processImage(inputImage);
 
-      setState(() {
-        _recognizedText = text.text;
-      });
-    } catch (e) {
-      print('Error processing image: $e');
-    } finally {
-      textRecognizer.close();
-    }
-  }
+  //     setState(() {
+  //       _recognizedText = text.text;
+  //     });
+  //   } catch (e) {
+  //     print('Error processing image: $e');
+  //   } finally {
+  //     textRecognizer.close();
+  //   }
+  // }
+
+//UNCOMMENT THE ABOVE CODE
 
   @override
   Widget build(BuildContext context) {
